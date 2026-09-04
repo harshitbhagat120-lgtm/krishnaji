@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Krishna Dotted Art Animation</title>
+    <title>Animated Dotted Shree Krishna Design</title>
     <style>
         * {
             margin: 0;
@@ -12,9 +12,9 @@
         }
 
         body {
-            background-color: #080a12;
+            background-color: #05070e;
             color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -25,15 +25,15 @@
 
         .container {
             text-align: center;
-            max-width: 800px;
+            max-width: 600px;
             width: 100%;
         }
 
         h1 {
             color: #ffd700;
             font-size: 2.2rem;
-            margin-bottom: 8px;
-            text-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+            margin-bottom: 5px;
+            text-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
         }
 
         p.subtitle {
@@ -44,7 +44,7 @@
 
         .btn {
             background: linear-gradient(135deg, #00c6ff, #0072ff);
-            color: #fff;
+            color: #ffffff;
             border: none;
             padding: 12px 30px;
             font-size: 1.1rem;
@@ -62,25 +62,230 @@
         }
 
         .btn:disabled {
-            background: #333d54;
-            box-shadow: none;
+            background: #23293e;
+            color: #666;
             cursor: not-allowed;
             transform: none;
-            color: #777;
+            box-shadow: none;
         }
 
         .canvas-card {
-            background: #101424;
-            border: 2px solid #1c233d;
+            background: #0d111d;
+            border: 2px solid #1a2238;
             border-radius: 16px;
             padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
         canvas {
-            background-color: #070913;
+            background-color: #05070e;
             border-radius: 10px;
-            max
+            border: 1px solid #161c2e;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .status {
+            margin-top: 15px;
+            font-size: 1.05rem;
+            color: #00e5ff;
+            min-height: 28px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Shree Krishna Dot Art</h1>
+    <p class="subtitle">Click below to start step-by-step dotted rendering</p>
+    
+    <button id="startBtn" class="btn">Get Started</button>
+
+    <div class="canvas-card">
+        <canvas id="dottedCanvas" width="500" height="550"></canvas>
+        <div id="statusText" class="status">Click "Get Started" to plot the design</div>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('dottedCanvas');
+    const ctx = canvas.getContext('2d');
+    const startBtn = document.getElementById('startBtn');
+    const statusText = document.getElementById('statusText');
+
+    let animationId = null;
+
+    // Helper functions to generate coordinates for dots
+    function generateLineDots(x1, y1, x2, y2, density, color, radius) {
+        const dots = [];
+        const dist = Math.hypot(x2 - x1, y2 - y1);
+        const count = Math.floor(dist * density);
+        for (let i = 0; i <= count; i++) {
+            const t = i / count;
+            dots.push({
+                x: x1 + (x2 - x1) * t,
+                y: y1 + (y2 - y1) * t,
+                color: color,
+                r: radius
+            });
+        }
+        return dots;
+    }
+
+    function generateQuadDots(x1, y1, cx, cy, x2, y2, density, color, radius) {
+        const dots = [];
+        const steps = 50;
+        for (let i = 0; i <= steps; i++) {
+            const t = i / steps;
+            const x = (1 - t) * (1 - t) * x1 + 2 * (1 - t) * t * cx + t * t * x2;
+            const y = (1 - t) * (1 - t) * y1 + 2 * (1 - t) * t * cy + t * t * y2;
+            dots.push({ x, y, color, r: radius });
+        }
+        return dots;
+    }
+
+    // Step Data Generator
+    function createStepsData() {
+        return [
+            {
+                title: "Step 1: Drawing Dotted Bansuri (Flute)...",
+                dots: [
+                    ...generateLineDots(110, 370, 390, 310, 0.4, '#ffd700', 2.5),
+                    ...generateLineDots(110, 382, 390, 322, 0.4, '#ffd700', 2.5),
+                    ...generateLineDots(110, 370, 110, 382, 0.5, '#ffd700', 2.5),
+                    ...generateLineDots(390, 310, 390, 322, 0.5, '#ffd700', 2.5),
+                    // Holes
+                    {x: 200, y: 348, color: '#ff9900', r: 3.5},
+                    {x: 230, y: 342, color: '#ff9900', r: 3.5},
+                    {x: 260, y: 336, color: '#ff9900', r: 3.5},
+                    {x: 290, y: 330, color: '#ff9900', r: 3.5},
+                    {x: 320, y: 324, color: '#ff9900', r: 3.5}
+                ]
+            },
+            {
+                title: "Step 2: Adding Flute Hanging Tassels...",
+                dots: [
+                    ...generateQuadDots(130, 378, 120, 420, 110, 460, 0.5, '#ff0055', 2),
+                    ...generateQuadDots(145, 375, 140, 430, 135, 470, 0.5, '#ff0055', 2),
+                    {x: 110, y: 465, color: '#ffd700', r: 4},
+                    {x: 135, y: 475, color: '#ffd700', r: 4}
+                ]
+            },
+            {
+                title: "Step 3: Plotting Face Profile with Blue Dots...",
+                dots: [
+                    ...generateQuadDots(240, 180, 230, 230, 248, 270, 0.5, '#00e5ff', 2),
+                    ...generateQuadDots(248, 270, 255, 280, 240, 290, 0.5, '#00e5ff', 2),
+                    ...generateQuadDots(240, 310, 255, 312, 268, 308, 0.5, '#ff3366', 2.2),
+                    ...generateQuadDots(243, 312, 255, 320, 265, 311, 0.5, '#ff3366', 2)
+                ]
+            },
+            {
+                title: "Step 4: Creating Sacred Tilak & Eye Dots...",
+                dots: [
+                    ...generateQuadDots(230, 160, 250, 230, 270, 160, 0.5, '#ffffff', 2.5),
+                    ...generateLineDots(250, 170, 250, 215, 0.5, '#ff2200', 2.5),
+                    ...generateQuadDots(210, 235, 235, 225, 260, 240, 0.5, '#00e5ff', 2),
+                    ...generateQuadDots(210, 235, 235, 250, 260, 240, 0.5, '#00e5ff', 2),
+                    {x: 235, y: 236, color: '#ffffff', r: 3}
+                ]
+            },
+            {
+                title: "Step 5: Stippling Mor Pankh (Peacock Feather)...",
+                dots: [
+                    ...generateQuadDots(250, 150, 260, 90, 270, 40, 0.5, '#00ff88', 2),
+                    ...generateQuadDots(270, 40, 300, 70, 270, 100, 0.5, '#00ff88', 2),
+                    ...generateQuadDots(270, 40, 240, 70, 270, 100, 0.5, '#00ff88', 2),
+                    ...generateQuadDots(270, 52, 288, 70, 270, 88, 0.5, '#00d4ff', 2),
+                    ...generateQuadDots(270, 52, 252, 70, 270, 88, 0.5, '#00d4ff', 2),
+                    ...generateQuadDots(270, 62, 278, 70, 270, 78, 0.5, '#9d4edd', 2.5),
+                    ...generateQuadDots(270, 62, 262, 70, 270, 78, 0.5, '#9d4edd', 2.5)
+                ]
+            },
+            {
+                title: "Step 6: Adding Feather Details & Aura Glow...",
+                dots: (function() {
+                    const featherRays = [];
+                    const cx = 270, cy = 70;
+                    for (let a = 0; a < Math.PI * 2; a += 0.25) {
+                        const r1 = 32;
+                        const r2 = 45 + (Math.sin(a * 5) * 8);
+                        featherRays.push(...generateLineDots(
+                            cx + Math.cos(a) * r1, cy + Math.sin(a) * r1,
+                            cx + Math.cos(a) * r2, cy + Math.sin(a) * r2,
+                            0.2, '#00ff88', 1.5
+                        ));
+                    }
+                    return featherRays;
+                })()
+            }
+        ];
+    }
+
+    function runAnimation() {
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        startBtn.disabled = true;
+
+        const steps = createStepsData();
+        let currentStepIndex = 0;
+        let currentDotIndex = 0;
+
+        function renderNextBatch() {
+            if (currentStepIndex >= steps.length) {
+                statusText.innerText = "✨ Dotted Krishna Design Complete! Radhe Radhe ✨";
+                startBtn.disabled = false;
+                startBtn.innerText = "Replay Design";
+                return;
+            }
+
+            const currentStep = steps[currentStepIndex];
+            statusText.innerText = currentStep.title;
+
+            const dotsToDraw = currentStep.dots;
+            const chunkSize = 3; // Number of dots drawn per animation frame
+
+            for (let i = 0; i < chunkSize && currentDotIndex < dotsToDraw.length; i++) {
+                const dot = dotsToDraw[currentDotIndex];
+                
+                // Main Dot
+                ctx.fillStyle = dot.color;
+                ctx.beginPath();
+                ctx.arc(dot.x, dot.y, dot.r, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Outer Soft Glow
+                ctx.fillStyle = dot.color + '44';
+                ctx.beginPath();
+                ctx.arc(dot.x, dot.y, dot.r * 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                currentDotIndex++;
+            }
+
+            if (currentDotIndex < dotsToDraw.length) {
+                animationId = requestAnimationFrame(renderNextBatch);
+            } else {
+                currentStepIndex++;
+                currentDotIndex = 0;
+                setTimeout(() => {
+                    animationId = requestAnimationFrame(renderNextBatch);
+                }, 250); // Pause briefly before next step
+            }
+        }
+
+        animationId = requestAnimationFrame(renderNextBatch);
+    }
+
+    startBtn.addEventListener('click', () => {
+        if (animationId) cancelAnimationFrame(animationId);
+        runAnimation();
+    });
+</script>
+
+</body>
+</html>
