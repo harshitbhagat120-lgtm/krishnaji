@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishna Canvas Drawing Animation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0b0d19;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #ffd700;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+        }
+
+        p.subtitle {
+            color: #a0aabf;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ff9933, #ff5500);
+            color: #fff;
+            border: none;
+            padding: 14px 32px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 102, 0, 0.4);
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 102, 0, 0.6);
+            background: linear-gradient(135deg, #ffaa44, #ff6611);
+        }
+
+        .btn:disabled {
+            background: #444;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .canvas-card {
+            background: #141829;
+            border: 2px solid #232942;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        canvas {
+            background-color: #0d111a;
+            border-radius: 8px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+            max-width: 100%;
+            height: auto;
+        }
+
+        .status {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            color: #ffd700;
+            height: 24px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Shree Krishna Art</h1>
+    <p class="subtitle">Watch the artistic creation unfold line by line</p>
+    
+    <button id="startBtn" class="btn">Start Drawing</button>
+
+    <div class="canvas-card">
+        <canvas id="krishnaCanvas" width="500" height="600"></canvas>
+        <div id="statusText" class="status">Click "Start Drawing" to begin</div>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('krishnaCanvas');
+    const ctx = canvas.getContext('2d');
+    const startBtn = document.getElementById('startBtn');
+    const statusText = document.getElementById('statusText');
+
+    let animationId = null;
+
+    // Define sequence of steps to render Krishna art
+    const steps = [
+        // Step 1: Flute (Bansuri)
+        {
+            title: "Drawing the Flute (Bansuri)...",
+            draw: (progress) => {
+                // Main Flute Body
+                ctx.strokeStyle = '#d4af37';
+                ctx.lineWidth = 14;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(100, 380);
+                const currentX = 100 + (300 * progress);
+                const currentY = 380 - (60 * progress);
+                ctx.lineTo(currentX, currentY);
+                ctx.stroke();
+
+                if (progress > 0.5) {
+                    // Flute details & holes
+                    ctx.fillStyle = '#1a0d00';
+                    const numHoles = Math.floor((progress - 0.5) * 12);
+                    for (let i = 0; i < numHoles; i++) {
+                        ctx.beginPath();
+                        ctx.arc(180 + (i * 25), 364 - (i * 5), 3, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+            }
+        },
+        // Step 2: Hanging Tassels on Flute
+        {
+            title: "Adding Decorative Tassels...",
+            draw: (progress) => {
+                ctx.strokeStyle = '#ff3366';
+                ctx.lineWidth = 3;
+                
+                // Left tassel
+                ctx.beginPath();
+                ctx.moveTo(120, 376);
+                ctx.bezierCurveTo(115, 410, 100, 430, 105, 430 + (20 * progress));
+                ctx.stroke();
+
+                // Right tassel
+                ctx.beginPath();
+                ctx.moveTo(135, 373);
+                ctx.bezierCurveTo(130, 410, 120, 440, 125, 440 + (20 * progress));
+                ctx.stroke();
+
+                // Tassel ends
+                if (progress > 0.8) {
+                    ctx.fillStyle = '#ff3366';
+                    ctx.beginPath(); ctx.arc(105, 450, 6, 0, Math.PI*2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(125, 460, 6, 0, Math.PI*2); ctx.fill();
+                }
+            }
+        },
+        // Step 3: Tilak (Sacred forehead mark)
+        {
+            title: "Drawing the Sacred Tilak...",
+            draw: (progress) => {
+                // Outer U shape
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(225, 230);
+                ctx.quadraticCurveTo(250, 310 * progress, 275, 230);
+                ctx.stroke();
+
+                // Inner Red Kasturi Line
+                if (progress > 0.4) {
+                    const innerProgress = (progress - 0.4) / 0.6;
+                    ctx.strokeStyle = '#ff2200';
+                    ctx.lineWidth = 5;
+                    ctx.beginPath();
+                    ctx.moveTo(250, 275);
+                    ctx.lineTo(250, 275 - (70 * innerProgress));
+                    ctx.stroke();
+                }
+            }
+        },
+        // Step 4: Peacock Feather Stem & Base
+        {
+            title: "Sketching Peacock Feather (Mor Pankh)...",
+            draw: (progress) => {
+                ctx.strokeStyle = '#2d5a27';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(250, 200);
+                ctx.quadraticCurveTo(260, 130, 270 - (20 * progress), 70 + (10 * progress));
+                ctx.stroke();
+            }
+        },
+        // Step 5: Peacock Feather Layers (Eye of Feather)
+        {
+            title: "Adding Colors to Peacock Feather...",
+            draw: (progress) => {
+                const centerX = 250;
+                const centerY = 90;
+
+                // Outer Green Feather Layer
+                ctx.fillStyle = `rgba(34, 139, 34, ${progress})`;
+                ctx.beginPath();
+                ctx.ellipse(centerX, centerY, 35 * progress, 50 * progress, -Math.PI / 12, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (progress > 0.4) {
+                    // Turquoise layer
+                    ctx.fillStyle = `rgba(0, 180, 216, ${(progress - 0.4) * 1.6})`;
+                    ctx.beginPath();
+                    ctx.ellipse(centerX, centerY + 2, 22, 32, -Math.PI / 12, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                if (progress > 0.7) {
+                    // Dark Blue Core
+                    ctx.fillStyle = '#03045e';
+                    ctx.beginPath();
+                    ctx.ellipse(centerX, centerY + 5, 12, 18, -Math.PI / 12, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        },
+        // Step 6: Feather Details & Rays
+        {
+            title: "Adding Fine Details to Feather...",
+            draw: (progress) => {
+                ctx.strokeStyle = '#00a86b';
+                ctx.lineWidth = 1.5;
+                const totalRays = Math.floor(30 * progress);
+                
+                for (let i = 0; i < totalRays; i++) {
+                    const angle = (i / 30) * Math.PI * 2;
+                    const x1 = 250 + Math.cos(angle) * 35;
+                    const y1 = 90 + Math.sin(angle) * 45;
+                    const x2 = 250 + Math.cos(angle) * (45 + (i % 3 * 3));
+                    const y2 = 90 + Math.sin(angle) * (55 + (i % 3 * 3));
+
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.stroke();
+                }
+            }
+        },
+        // Step 7: Divine Aura & Sparkles
+        {
+            title: "Adding Divine Aura & Final Touches...",
+            draw: (progress) => {
+                // Background Glow
+                const gradient = ctx.createRadialGradient(250, 250, 20, 250, 250, 250 * progress);
+                gradient.addColorStop(0, 'rgba(255, 215, 0, 0.15)');
+                gradient.addColorStop(1, 'rgba(13, 17, 26, 0)');
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(250, 250, 250, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Sparkles around
+                const numStars = Math.floor(15 * progress);
+                ctx.fillStyle = '#ffffff';
+                for (let i = 0; i < numStars; i++) {
+                    const sx = (Math.sin(i * 99) * 0.5 + 0.5) * 400 + 50;
+                    const sy = (Math.cos(i * 33) * 0.5 + 0.5) * 400 + 50;
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, (i % 3) + 1, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+    ];
+
+    function runAnimation() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        startBtn.disabled = true;
+        
+        let currentStepIndex = 0;
+        let stepProgress = 0;
+        const stepDuration = 1200; // time per step in ms
+        let startTime = null;
+
+        function animate(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+
+            stepProgress = Math.min(elapsed / stepDuration, 1);
+
+            // Execute current step drawing
+            steps[currentStepIndex].draw(stepProgress);
+            statusText.innerText = steps[currentStepIndex].title;
+
+            if (stepProgress < 1) {
+                animationId = requestAnimationFrame(animate);
+            } else {
+                // Move to next step
+                currentStepIndex++;
+                if (currentStepIndex < steps.length) {
+                    startTime = null;
+                    animationId = requestAnimationFrame(animate);
+                } else {
+                    statusText.innerText = "✨ Design Completed! Radhe Radhe ✨";
+                    startBtn.disabled = false;
+                    startBtn.innerText = "Replay Design";
+                }
+            }
+        }
+
+        animationId = requestAnimationFrame(animate);
+    }
+
+    startBtn.addEventListener('click', () => {
+        if (animationId) cancelAnimationFrame(animationId);
+        runAnimation();
+    });
+</script>
+
+</body>
+</html>
